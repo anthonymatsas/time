@@ -1,0 +1,313 @@
+html {
+	box-sizing: border-box;
+	width: 800px;
+	overflow-x: hidden;
+}
+
+*,*:before,*:after {
+	box-sizing: inherit;
+}
+
+html,body, pre {
+	font-family: Verdana,sans-serif;
+	font-size: 15px;
+	line-height: 1.5;
+}
+
+html{
+	overflow-x: hidden:
+}
+
+h1 {
+	font-size: 36px;
+}
+
+h2 {
+	font-size: 30px;
+}
+
+h3 {
+	font-size: 24px;
+}
+
+h4 {
+	font-size: 20px;
+}
+
+h5 {
+	font-size: 18px;
+}
+
+h6 {
+	font-size: 16px;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-family: "Segoe UI",Arial,sans-serif;
+	font-weight: 400;
+	margin: 10px 0;
+}
+
+body {
+	margin: 0;
+	color: #000!important;
+	background-color: white!important;
+}
+
+input, .input {
+	padding: 8px;
+	display: block;
+	border: 1px solid #ccc;
+	width: 90%;
+	font-size: 12px;
+}
+
+textarea {
+	resize: none;
+}
+
+.top {
+	top: 0;
+}
+
+.bar {
+	width: 100%;
+	overflow: hidden;
+	color: black;
+	background-color: #efefef;
+}
+
+.bar-block .dropdown-hover {
+	width:100%;
+}
+
+.bar-block .dropdown-hover .dropdown-content, .bar-block .dropdown-content {
+	min-width: 100%;
+}
+
+.bar-block .dropdown-hover .button, .bar-block .button {
+	width: 100%;
+	text-align:left;
+	padding:8px 16px;
+}
+
+.main {
+	width: 100%;
+}
+
+.container {
+	padding: 0.01em 16px;
+}
+
+.dropdown-hover {
+	display: inline-block;
+}
+
+.dropdown-hover:hover .dropdown-content {
+	display: block;
+	z-index: 1;
+}
+
+.dropdown-content {
+	cursor: auto;
+	color: #000;
+	background-color: #efefef!important;
+	display: none;
+	position: absolute;
+	margin:0;
+	padding: 0;
+}
+
+.empty {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.links {
+	display: block;
+	padding: 8px 16px;
+	width: 100%;
+	text-align: left;
+	border: none;
+	outline: none;
+}
+
+.link {
+	display: block;
+	width: 100%;
+}
+
+.quarter {
+	color: white;
+	float: left;
+	width: 100%;
+	padding: 0 4px;
+}
+
+.stats {
+	background-color: #7a2122;
+}
+
+.stats:hover {
+	background-color: #934c4b;
+}
+
+.row {
+	padding: 0 8px;
+	margin-top: 5px;
+}
+
+.third, .two-third, .special-third, .special-two-third {
+	float: left;
+	width: 100%;
+	padding: 0 8px;
+}
+
+.padding-16 {
+	padding-top:16px!important;
+	padding-bottom:16px!important;
+}
+
+.padding-24 {
+	padding-top:24px!important;
+	padding-bottom:24px!important;
+}
+
+.padding-32 {
+	padding-top:32px!important;
+	padding-bottom:32px!important;
+}
+
+.button {
+	overflow: hidden;
+	text-decoration: none;
+	cursor: pointer;
+	border: none;
+	display: inline-block;
+	color: inherit;
+	background-color: inherit;
+	outline: 0;
+	padding: 8px 16px;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.button:hover {
+	background-color: #fcfcfc!important;
+}
+
+.table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	width: 100%;
+	display: table;
+}
+
+th {
+	padding: 10px;
+}
+
+td {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+thead {
+	text-align: left;
+}
+
+/* <hr> style */
+.n-fade {
+	border: 0;
+	height: 1px;
+	background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+	margin-bottom: 5px;
+}
+
+.c-fade {
+	border: 0;
+	height: 1px;
+	background-image: linear-gradient(to right, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.05));
+	margin-bottom: 5px;
+}
+
+.customerData {
+	height: 255px;
+	overflow-y: scroll;
+}
+
+/* Colors */
+.white {
+	background-color: #ffffff!important;
+}
+
+/* Font */
+.left {
+	float: left!important;
+}
+
+.right {
+	float: right!important;
+}
+
+.x-small {
+	font-size: 10px!important;
+}
+
+.small {
+	font-size: 12px!important;
+}
+
+.medium {
+	font-size: 14px!important;
+}
+
+.large {
+	font-size: 16px!important;
+}
+
+.x-large {
+	font-size: 18px!important;
+}
+
+.error {
+	color: red;
+}
+
+.no-show {
+	display: none;
+}
+
+.show {
+	display: block;
+}
+
+/* Mobile Rules */
+@media (
+	min-width:993px
+	){.sidebar{display:block!important}}
+
+@media (
+	max-width:992px
+	){.sidebar{display:none}.main{margin-left:0!important;margin-right:0!important}}
+
+@media (
+	min-width:601px
+	){.quarter{width: 24.99999%}}
+
+@media (
+	min-width:601px
+	){.third{width:33.33333%}}
+
+@media (
+	min-width:601px
+	){.two-third{width:66.66666%}}
+
+@media (
+	min-width:601px
+	){.special-third{width:23.33333%}}
+
+@media (
+	min-width:601px
+	){.special-two-third{width:76.66666%}}

@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+ <head>
+  <title>Log</title>
+  <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="time.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" type="text/css" href="time.css">
+ </head>
+ <body>
+  <div class="main">
+   <div class="row">
+    <div class="special-third">
+     <h5>Time Entry</h5>
+     <label class="small">Date</label>
+     <input id="taskDate" type="date">
+     <label class="small">Customer</label>
+     <input id="taskCustomer" type="text">
+     <label class="small">Time</label>
+     <input id="taskTime" type="number">
+     <label class="small">Description</label>
+     <textarea id="taskDescription" class="input"></textarea>
+     <button id="addButton">Add</button><br>
+     <br>
+     <div id="error" class="small error no-show"></div>
+    </div>
+
+    <div class="special-two-third">
+     <table class="table">
+      <thead>
+       <th class="small"></th>
+       <th class="small">Date</th>
+       <th class="small">Customer</th>
+       <th class="small">Time</th>
+       <th class="small">Description</th>
+      </thead>
+      <tbody id="entriesTbody">
+      </tbody>
+     </table>
+    </div>
+   </div>
+
+  </div>
+ </body>
+</html>
