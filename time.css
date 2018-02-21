@@ -62,6 +62,13 @@ input, .input {
 	font-size: 12px;
 }
 
+p {
+	display: block;
+	width: 100%;
+	padding: 2px;
+	margin: 2px;
+}
+
 textarea {
 	resize: none;
 }

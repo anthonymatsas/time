@@ -124,10 +124,23 @@ $(document).ready(function() {
 			}
 		};
 
+		db.export = function(callback) {
+			var stores = [
+				"time",
+			];
+
+			db.getAllTime(function(tasks) {
+				callback(JSON.stringify(tasks));
+			});
+		};
+
 		return db;
 	}());
 
 	var addButton = $("#addButton"),
+		backupButton = $("#backupButton"),
+		backupStatus = $("#backupStatus"),
+		backupLink = $("#backupLink"),
 		tbody = $("#entriesTbody"),
 		taskDate = $("#taskDate"),
 		taskCustomer = $("#taskCustomer"),
@@ -189,6 +202,16 @@ $(document).ready(function() {
 
 	});
 
+	backupButton.on("click", function(event) {
+		event.preventDefault();
+		backupStatus.removeClass("no-show")
+			.append("<p>exporting db... </p>");
+
+		timeDB.export(function (tasks) {
+			exportDB(tasks);
+		});
+	});
+
 	function validateInputs() {
 		var valid = true
 			error = $("#error")
@@ -220,6 +243,28 @@ $(document).ready(function() {
 		}
 
 		return valid;
+	}
+
+	function exportDB(backupData) {
+		var date = new Date(),
+			m = date.getMonth() + 1,
+			d = date.getDate(),
+			y = date.getFullYear(),
+			s = date.getSeconds(),
+			fileName = "time_backup_" + m + "_" + d + "_" + y + "_" + s + ".json";
+
+		var link = $("<a>")
+			.attr("href", "data:Application/octet-stream," + encodeURIComponent(backupData))
+			.attr("title", "file")
+			.attr("download", fileName)
+			.text(fileName)
+			.addClass("link");
+
+		backupStatus.find("p")
+			.append("  done");
+		backupLink.removeClass("no-show")
+			.html(link)
+			.append("<br>");
 	}
 
 });
