@@ -198,6 +198,11 @@ $(document).ready(function() {
 			timeDB.createTask(time, function(task) {
 				displayTasks();
 			});
+
+			taskDate.val("");
+			taskCustomer.val("");
+			taskTime.val("");
+			taskDescription.val("");
 		}
 
 	});
@@ -205,6 +210,7 @@ $(document).ready(function() {
 	backupButton.on("click", function(event) {
 		event.preventDefault();
 		backupStatus.removeClass("no-show")
+			.empty()
 			.append("<p>exporting db... </p>");
 
 		timeDB.export(function (tasks) {
