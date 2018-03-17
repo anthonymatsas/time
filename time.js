@@ -148,6 +148,7 @@ $(document).ready(function() {
 		taskDescription = $("#taskDescription");
 
 	timeDB.open(displayTasks);
+
 	function displayTasks() {
 		timeDB.getAllTime(function (time) {
 
@@ -219,25 +220,26 @@ $(document).ready(function() {
 	});
 
 	function validateInputs() {
-		var valid = true
-			error = $("#error")
+		var inputs = $(':input'),
+			error = $("#error"),
+			valid = true,
 			message = "";
 
 		error.empty();
-		//loop through inputs instead
-		if (! taskDate.val()) {
-			valid = false;
-			message = "task date required";
-		} else if (! taskCustomer.val()) {
-			valid = false;
-			message = "task customer required";
-		} else if (! taskTime.val()) {
-			valid = false;
-			message = "task time required";
-		} else if (! taskDescription.val()) {
-			valid = false;
-			message = "task description required";
-		}
+
+		$.each(inputs, function(index, ui) {
+			if (! $(this).is('button') && ! $(this).val()) {
+				var elementId = $(this).attr('id').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase();
+				valid = false;
+
+				message = elementId + ' required';
+				return false;
+			}
+
+			if (! valid) {
+				return false;
+			}
+		});
 
 		if (message && ! valid) {
 			error.removeClass("no-show")
@@ -268,9 +270,9 @@ $(document).ready(function() {
 
 		backupStatus.find("p")
 			.append("  done");
+
 		backupLink.removeClass("no-show")
 			.html(link)
 			.append("<br>");
 	}
-
 });
