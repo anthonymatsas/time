@@ -1,11 +1,11 @@
 var timeDB = (function() {
 	var db = {},
 		dataStore = null
-		storeName = "time";
+		storeName = 'time';
 
 	//db connection
 	db.open = function(callback) {
-		var version = 1,
+		var version = 2,
 			store = indexedDB.open(storeName, version);
 
 		store.onupgradeneeded = function (event) {
@@ -16,7 +16,8 @@ var timeDB = (function() {
 				conn.deleteObjectStore(storeName);
 			}
 
-			var newStore = conn.createObjectStore(storeName, { keyPath: "id", autoIncrement: true});
+			var newStore = conn.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true});
+			newStore.createIndex('createdDateTime', 'createdDateTime', { unique: true });
 		};
 
 		store.onsuccess = function (event) {
@@ -31,7 +32,7 @@ var timeDB = (function() {
 	//get all tasks
 	db.getAllTime = function (callback) {
 		var store = dataStore,
-			transaction = store.transaction(storeName, "readwrite"),
+			transaction = store.transaction(storeName, 'readwrite'),
 			objectStore = transaction.objectStore(storeName);
 
 		var time = [];
@@ -41,7 +42,7 @@ var timeDB = (function() {
 		};
 
 		var keyRange = IDBKeyRange.lowerBound(0),
-			cursorRequest = objectStore.openCursor(keyRange);
+			cursorRequest = objectStore.index('createdDateTime').openCursor(keyRange);
 
 		cursorRequest.onsuccess = function (event) {
 			var result = event.target.result;
@@ -61,17 +62,17 @@ var timeDB = (function() {
 	//add task
 	db.createTask = function (data, callback) {
 		var store = dataStore,
-			transaction = store.transaction(storeName, "readwrite"),
+			transaction = store.transaction(storeName, 'readwrite'),
 			objectStore = transaction.objectStore(storeName);
 
 		var time = {
-			"customer": data.customer,
-			"time": data.time,
-			"description": data.description,
-			"complete": data.complete,
-			"taskDate": data.taskDate,
-			"createdDateTime": new Date().getTime(),
-			"completedDateTime": null,
+			'customer': data.customer,
+			'time': data.time,
+			'description': data.description,
+			'complete': data.complete,
+			'taskDate': data.taskDate,
+			'createdDateTime': new Date().getTime(),
+			'completedDateTime': null,
 		};
 
 		var dataStoreRequest = objectStore.put(time);
@@ -85,7 +86,7 @@ var timeDB = (function() {
 	//remove task
 	db.removeTask = function(id, callback) {
 		var store = dataStore,
-			transaction = store.transaction(storeName, "readwrite"),
+			transaction = store.transaction(storeName, 'readwrite'),
 			objectStore = transaction.objectStore(storeName);
 
 		if (! id) {
@@ -104,14 +105,20 @@ var timeDB = (function() {
 
 	db.completeTask = function(id, callback) {
 		var store = dataStore,
-			transaction = store.transaction(storeName, "readwrite"),
+			transaction = store.transaction(storeName, 'readwrite'),
 			objectStore = transaction.objectStore(storeName);
 
 		var dataStoreRequest = objectStore.get(id);
 
 		dataStoreRequest.onsuccess = function(event) {
 			var task = dataStoreRequest.result;
+			console.log(task);
+			if (! task) {
+				return;
+			}
+
 			task.complete = 1;
+
 			var updateRequest = objectStore.put(task);
 			updateRequest.onsuccess = function(event) {
 				callback(task);
@@ -125,11 +132,34 @@ var timeDB = (function() {
 
 	db.export = function(callback) {
 		var stores = [
-			"time",
+			'time',
 		];
 
 		db.getAllTime(function(tasks) {
 			callback(JSON.stringify(tasks));
+		});
+	};
+
+	db.getDateRange = function(callback) {
+		var range = [],
+			fromDate = new Date().getTime(),
+			thruDate = new Date().getTime();
+
+		db.getAllTime(function(tasks) {
+			for (var i in tasks) {
+				var taskDate = Date.parse(tasks[i].taskDate);
+				return;
+				if (taskDate < fromDate) {
+					fromDate = taskDate;
+				}
+
+				if (taskDate > thruDate) {
+					thruDate = taskDate;
+				}
+
+			}
+
+			return range;
 		});
 	};
 
