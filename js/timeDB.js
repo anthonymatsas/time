@@ -108,11 +108,10 @@ var timeDB = (function() {
 			transaction = store.transaction(storeName, 'readwrite'),
 			objectStore = transaction.objectStore(storeName);
 
-		var dataStoreRequest = objectStore.get(id);
+		var dataStoreRequest = objectStore.get(Number.parseInt(id));
 
 		dataStoreRequest.onsuccess = function(event) {
 			var task = dataStoreRequest.result;
-			console.log(task);
 			if (! task) {
 				return;
 			}
