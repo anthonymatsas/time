@@ -1,6 +1,5 @@
 window.onload = function() {
 	var selectFile = document.querySelector('#selectFile'),
-		importButton = document.querySelector('#importButton'),
 		chartResults = document.querySelector('#chartResults'),
 		chartContainer = document.querySelector('.chart'),
 		chart = null,
@@ -11,30 +10,6 @@ window.onload = function() {
 		};
 
 	timeDB.open(getGraphData);
-
-	importButton.onclick = function() {
-		var files = selectFile.files;
-
-		if (! files[0]) {
-			console.log('No files found');
-		}
-
-		var fileName = files[0].name.split('_');
-		var graphTitle = fileName[2] + '/' + fileName[3] + '/' + fileName[4];
-		plotData.title = graphTitle;
-
-		var fileReader = new FileReader();
-		fileReader.onload = function (event) {
-			var fileContent = event.target.result;
-			uploadedData = JSON.parse(fileContent);
-
-			if (uploadedData) {
-				processData();
-			}
-		};
-
-		fileReader.readAsText(files[0]);
-	}
 
 	function processData() {
 		var groupedData = [],
@@ -56,6 +31,16 @@ window.onload = function() {
 			orderedData[count] = [customer, groupedData[customer]];
 			count++;
 		}
+
+		orderedData.sort(function (a, b) {
+			if (a[0] < b[0]) {
+				return -1;
+			} else if (a[0] > b[0]) {
+				return 1;
+			}
+
+			return 0;
+		});
 
 		plotData.data = orderedData;
 
@@ -113,6 +98,11 @@ window.onload = function() {
 					yAxes: [{
 						ticks: {
 							beginAtZero: true
+						}
+					}],
+					xAxes: [{
+						ticks: {
+							autoSkip: false,
 						}
 					}]
 				}

@@ -48,6 +48,11 @@ h1,h2,h3,h4,h5,h6 {
 	margin: 10px 0;
 }
 
+.setting-label {
+	font-size: 13px;
+	font-family: "Segoe UI",Arial,sans-serif;
+}
+
 body {
 	margin: 0;
 	color: #000!important;
@@ -247,6 +252,7 @@ thead {
 .nav {
 	overflow: hidden;
 	background-color: #333;
+	margin-bottom: 15px;
 }
 
 .nav a {
@@ -256,6 +262,10 @@ thead {
 	padding: 12px 14px;
 	text-decoration: none;
 	font-size: 15px;
+}
+
+.active-menu {
+	background-color: #1e1e1e;
 }
 
 .chart {
@@ -281,7 +291,7 @@ thead {
 	font-size: 10px!important;
 }
 
-.small {
+.small, .setting-error {
 	font-size: 12px!important;
 }
 
@@ -297,7 +307,7 @@ thead {
 	font-size: 18px!important;
 }
 
-.error {
+.error, .setting-error {
 	color: red;
 }
 
@@ -307,6 +317,36 @@ thead {
 
 .show {
 	display: block;
+}
+
+.settings {
+	margin: 10px 10px;
+}
+
+.autocomplete-items {
+	position: absolute;
+	width: 150px;
+	border: 1px solid #ccc;
+	border-bottom: none;
+	border-top: none;
+	z-index: 99;
+	background-color: white;
+}
+
+.autocomplete-items div {
+	padding: 10px;
+	cursor: pointer;
+	border-bottom: 1px solid #ccc;
+}
+
+.autocomplete-items div:hover {
+	background-color: #e9e9e9;
+}
+
+.autocomplete-active {
+	/*when navigating through the items using the arrow keys:*/
+	background-color: DodgerBlue !important;
+	color: #ffffff;
 }
 
 /* Mobile Rules */

@@ -1,4 +1,4 @@
-var timeDB = (function() {
+const timeDB = (function() {
 	var db = {},
 		dataStore = null
 		storeName = 'time';
@@ -23,7 +23,9 @@ var timeDB = (function() {
 		store.onsuccess = function (event) {
 			dataStore = event.target.result;
 
-			callback();
+			if (callback) {
+				callback();
+			}
 		};
 
 		store.onerror = db.onerror;
@@ -52,6 +54,15 @@ var timeDB = (function() {
 			}
 
 			time.push(result.value);
+			time.sort(function(a, b) {
+				if (a[0] < b[0]) {
+					return -1;
+				} else if (a[0] > b[0]) {
+					return 1;
+				}
+
+				return 0;
+			});
 
 			result.continue();
 		};
@@ -65,14 +76,24 @@ var timeDB = (function() {
 			transaction = store.transaction(storeName, 'readwrite'),
 			objectStore = transaction.objectStore(storeName);
 
+		var createdDateTime = new Date().getTime();
+		var completedDateTime = null;
+		if (data.completedDateTime) {
+			completedDateTime = data.completedDateTime;
+		}
+
+		if (data.createdDateTime) {
+			createdDateTime = data.createdDateTime;
+		}
+
 		var time = {
 			'customer': data.customer,
 			'time': data.time,
 			'description': data.description,
 			'complete': data.complete,
 			'taskDate': data.taskDate,
-			'createdDateTime': new Date().getTime(),
-			'completedDateTime': null,
+			'createdDateTime': createdDateTime,
+			'completedDateTime': completedDateTime,
 		};
 
 		var dataStoreRequest = objectStore.put(time);
@@ -80,7 +101,9 @@ var timeDB = (function() {
 			callback(time);
 		}
 
-		dataStoreRequest.onerror = db.onerror;
+		dataStoreRequest.onerror = function(e) {
+			console.log(e.target.error);
+		};
 	};
 
 	//remove task
@@ -102,6 +125,17 @@ var timeDB = (function() {
 			console.log(event);
 		}
 	};
+
+	db.removeAllTasks = function(callback) {
+		const transaction = dataStore.transaction(storeName, 'readwrite'),
+			objectStore = transaction.objectStore(storeName);
+
+		var objectStoreRequest = objectStore.clear();
+
+		objectStoreRequest.onsuccess = function(event) {
+			callback();
+		};
+	}
 
 	db.completeTask = function(id, callback) {
 		var store = dataStore,

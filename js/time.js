@@ -1,13 +1,12 @@
 window.onload = function() {
 	var addButton = document.querySelector('#addButton'),
-		backupButton = document.querySelector('#backupButton'),
-		backupStatus = document.querySelector('#backupStatus'),
-		backupLink = document.querySelector('#backupLink'),
 		tbody = document.querySelector('#entriesTbody'),
 		taskDate = document.querySelector('#taskDate'),
 		taskCustomer = document.querySelector('#taskCustomer'),
 		taskTime = document.querySelector('#taskTime'),
-		taskDescription = document.querySelector('#taskDescription');
+		taskDescription = document.querySelector('#taskDescription'),
+		autoCompleteDiv = document.querySelector('#autocomplete'),
+		currentFocus;
 
 	taskDate.valueAsDate = new Date();
 	timeDB.open(displayTasks);
@@ -73,26 +72,12 @@ window.onload = function() {
 				displayTasks();
 			});
 
-			taskDate.value = '';
+			taskDate.valueAsDate = new Date();
 			taskCustomer.value = '';
 			taskTime.value = '';
 			taskDescription.value = '';
 		}
 
-	};
-
-	backupButton.onclick = function(event) {
-		event.preventDefault();
-		backupStatus.classList.remove('no-show');
-		backupStatus.innerHTML = '';
-
-		const exportElement = document.createElement('p');
-		exportElement.innerHTML = 'exporting db...';
-		backupStatus.appendChild(exportElement);
-
-		timeDB.export(function (tasks) {
-			exportDB(tasks);
-		});
 	};
 
 	function validateInputs() {
@@ -132,27 +117,98 @@ window.onload = function() {
 		return valid;
 	}
 
-	function exportDB(backupData) {
-		var date = new Date(),
-			m = date.getMonth() + 1,
-			d = date.getDate(),
-			y = date.getFullYear(),
-			s = date.getSeconds(),
-			fileName = "time_backup_" + m + "_" + d + "_" + y + "_" + s + ".json";
+	taskCustomer.onkeydown = function(event) {
+		var autoCompleteItems = document.getElementById(this.id + 'autocomplete-list');
+		if (autoCompleteItems) {
+			autoCompleteItems = autoCompleteItems.getElementsByTagName('div');
+		}
 
-		var link = document.createElement('a');
-		link.setAttribute('href', 'data:Application/octet-stream,' + encodeURIComponent(backupData));
-		link.setAttribute('title', 'file');
-		link.setAttribute('download', fileName);
-		link.setAttribute('class', 'link');
-		link.innerHTML = fileName;
+		if (event.keyCode == 40) {
+			currentFocus++;
+			addActive(autoCompleteItems);
+		} else if (event.keyCode == 38) {
+			currentFocus--;
+			addActive(autoCompleteItems);
+		} else if (event.keyCode == 13) {
+			e.preventDefault();
+			if (currentFocus > -1 && autoCompleteItems) {
+				autoCompleteItems[currentFocus].click();
+			}
+		}
+	};
 
-		backupStatus.querySelector("p")
-			.textContent += '  done';
+	function addActive(item) {
+		if (! item) {
+			return;
+		}
 
-		backupLink.innerHTML = '';
-		backupLink.classList.remove("no-show")
-		backupLink.appendChild(link);
-		backupLink.appendChild(document.createElement('br'));
+		removeActive(item);
+		if (currentFocus >= item.length) {
+			currentFocus = 0;
+		}
+
+		if (currentFocus < 0) {
+			currentFocus = (x.length - 1);
+		}
+
+		item[currentFocus].classList.add('autocomplete-active');
+	}
+
+	function removeActive(item) {
+		for (var i = 0; i < x.length; i++) {
+			item[i].classList.remove('autocomplete-active');
+		}
+	}
+
+	function closeAllLists(element) {
+		var autoCompleteItems = document.getElementsByClassName('autocomplete-items');
+		for (var i = 0; i < autoCompleteItems.length; i++) {
+			if (element != autoCompleteItems[i] && element != taskCustomer) {
+				autoCompleteItems[i].parentNode.removeChild(autoCompleteItems[i])
+			}
+		}
+	}
+
+	taskCustomer.oninput = function(event) {
+		var val = this.value;
+
+		timeDB.getAllTime(function (time, event) {
+			var data = [];
+
+			closeAllLists();
+
+			if (! val) {
+				return false;
+			}
+
+			for (var y = 0; y < time.length; y++) {
+				if (data.indexOf(time[y].customer) < 0) {
+					data.push(time[y].customer);
+				}
+			}
+
+			currentFocus = -1;
+			var autoCompleteItems = document.createElement('DIV');
+			autoCompleteItems.setAttribute('id', taskCustomer.getAttribute('id') + 'autocomplete-list');
+			autoCompleteItems.setAttribute('class', 'autocomplete-items');
+
+			autoCompleteDiv.appendChild(autoCompleteItems);
+			for (var i = 0; i < data.length; i++) {
+				if (data[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+					var matching = document.createElement('DIV');
+					matching.setAttribute('class', 'small');
+					matching.innerHTML = '<strong>' + data[i].substr(0, val.length) + '</strong>';
+					matching.innerHTML += data[i].substr(val.length);
+					matching.innerHTML += '<input type="hidden" value="' + data[i] + '">';
+
+					matching.onclick = function(event) {
+						taskCustomer.value = this.getElementsByTagName('input')[0].value;
+						closeAllLists();
+					};
+
+					autoCompleteItems.appendChild(matching);
+				}
+			}
+		});
 	}
 }
